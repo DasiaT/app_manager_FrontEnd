@@ -5,12 +5,12 @@ import { Grid, TextField, CircularProgress, Typography } from "@mui/material";
 import SaveAsTwoToneIcon from "@mui/icons-material/SaveAsTwoTone";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { usePatchWorkstationMutation } from "../../../stores/users/workstationAPI";
-import { IWorstation, IWorstationPatch } from "../../../stores/users/interfaces/IWorkstation";
+import { useDeleteWorkstationMutation } from "../../../stores/users/workstationAPI";
+import { IWorstation, IWorstationPatch, IWorstationDelete } from "../../../stores/users/interfaces/IWorkstation";
 import { style_modal } from "../../../components_generals/style_modal";
 import { BaseApiErrorResponse } from "../../../stores/interfaces generales/Base_API_Error_Response";
 
-export const FormWorkstationPatch: FC<{
+export const FormWorkstationDelete: FC<{
   datos?: IWorstation;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,16 +24,16 @@ export const FormWorkstationPatch: FC<{
   const handleClose = () => { setIsModalOpen(false); reset(); };
 
   //API DE GUARDADO
-  const [ registerCatalog, {isLoading: isLoadingRegister, isSuccess: isSuccessRegister, isError: isErrorRegister, error: errorRegister, reset: resetRegister, },] = usePatchWorkstationMutation();
+  const [ registerCatalog, {isLoading: isLoadingRegister, isSuccess: isSuccessRegister, isError: isErrorRegister, error: errorRegister, reset: resetRegister, },] = useDeleteWorkstationMutation();
 
   //VALORES POR DEFECTO AL EMPEZAR
-  const [selectedRow, setSelectedRow] = useState<IWorstationPatch>({ id:0,name: "", });
+  const [selectedRow, setSelectedRow] = useState<IWorstationDelete>({ id:0 });
 
   //LO QUE PASA CADA VEZ QUE GUARDO O ACTUALIZO
   useEffect(() => {
 
     if (isSuccessRegister) {
-      toast.success("Se registro correctamente");
+      toast.success("Se elimino correctamente");
       reset();
       setIsModalOpen(false);
       setIsSaveExist(true);
@@ -63,14 +63,13 @@ export const FormWorkstationPatch: FC<{
 
 
 
-  //PARA GUARDAR O ACTUALIZAR
+  //PARA ELIMINAR
   const onSubmit = async (data: IWorstationPatch) => {
     const updatedRow = { ...selectedRow };
 
     //REVISA QUE NO QUEDEN ERRORES EN FORMULARIO
     if (Object.keys(errors).length === 0) {
       updatedRow.id = data.id;
-      updatedRow.name = data.name;
       
       setSelectedRow(updatedRow);
 
@@ -91,7 +90,10 @@ export const FormWorkstationPatch: FC<{
           <Grid container sx={{ ...style_modal }}>
             <Grid item xs={12}>
               <Typography align="center" variant="h4">
-                Editar Puesto de Trabajo
+                Eliminar Puesto de Trabajo
+              </Typography>
+              <Typography align="center" variant="h6">
+                Estas seguro?
               </Typography>
               <Grid container spacing={1} sx={{ marginTop: "20px" }}>
                 <Grid item xs={12}>
@@ -124,6 +126,9 @@ export const FormWorkstationPatch: FC<{
                     fullWidth
                     label="Name"
                     type="text"
+                    InputProps={{
+                        readOnly: true,
+                    }}
                     defaultValue={datos?.name}
                     error={errors.name ? true : false}
                     helperText={errors.name ? errors.name.message : ""}
@@ -153,7 +158,7 @@ export const FormWorkstationPatch: FC<{
                     )
                   }
                 >
-                  Guardar
+                  Eliminar
                 </Button>
               </Grid>
               <Grid item xs={5.8} sx={{ marginTop: "20px" }}>

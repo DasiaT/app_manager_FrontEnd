@@ -19,7 +19,8 @@ import ListItemText from '@mui/material/ListItemText';
 import { pages_mantenimiento } from './components/Pages_Mantenimiento';
 import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
 import { clearLocalStorage } from '../login/components/singout';
-import { Button } from '@mui/material';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -143,7 +144,7 @@ export default function MiniDrawer() {
                 </ListItemButton>
               </ListItem>
             ))}
-            <Button onClick={clearLocalStorage}>Cerrar Sesion</Button>
+            <ExitToAppIcon onClick={clearLocalStorage}></ExitToAppIcon>
           </List>
         </Drawer>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }} >

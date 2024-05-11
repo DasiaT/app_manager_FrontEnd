@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BaseApiResponse } from "../interfaces generales/Base_API_Response";
-import { IWorstation, IWorstationPost, IWorstationFilters, IWorstationPatch } from "./interfaces/IWorkstation";
+import { IWorstation, IWorstationPost, IWorstationFilters, IWorstationPatch, IWorstationDelete } from "./interfaces/IWorkstation";
 
 export const workstationAPI = createApi({
     reducerPath: 'workstationApi',
@@ -69,6 +69,19 @@ export const workstationAPI = createApi({
                     }
                 };
             }
+        }),
+        deleteWorkstation: builder.mutation<BaseApiResponse<IWorstationDelete>, IWorstationDelete>({
+            query: ({id}) => {
+                const url = `/Workstation`;
+
+                return {
+                    url: url,
+                    method: 'DELETE',
+                    body: {
+                        Id: id
+                    }
+                };
+            }
         })
     })
 });
@@ -77,5 +90,6 @@ export const workstationAPI = createApi({
 export const {
     useGetWorkstationQuery, 
     usePostWorkstationMutation,
-    usePatchWorkstationMutation
+    usePatchWorkstationMutation,
+    useDeleteWorkstationMutation
 } = workstationAPI; 

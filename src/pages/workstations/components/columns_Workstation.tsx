@@ -1,12 +1,14 @@
 import { GridColDef } from "@mui/x-data-grid"
 import { IWorstation } from "../../../stores/users/interfaces/IWorkstation"
-import { Button } from "@mui/material"
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
 
 type ColumnProps = {
   OpenModalPatch: (row: IWorstation) => void;
+  OpenModalDelete: (row: IWorstation) => void;
 }
 
-export const columns_Workstation: (props: ColumnProps) => GridColDef<IWorstation>[] = ({ OpenModalPatch }) => [
+export const columns_Workstation: (props: ColumnProps) => GridColDef<IWorstation>[] = ({ OpenModalPatch, OpenModalDelete }) => [
   {
     field: 'id',
     headerName: 'ID',
@@ -25,13 +27,18 @@ export const columns_Workstation: (props: ColumnProps) => GridColDef<IWorstation
     sortable: false,
     width: 100,
     renderCell: (params) => (
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => OpenModalPatch(params.row)}
-      >
-        Editar
-      </Button>
+      <EditTwoToneIcon onClick={() => OpenModalPatch(params.row)} style={{ color: 'blue' }}>
+      </EditTwoToneIcon>
+    ),
+  },
+  {
+    field: 'delete',
+    headerName: 'Eliminar',
+    sortable: false,
+    width: 100,
+    renderCell: (params) => (
+      <DeleteForeverTwoToneIcon onClick={() => OpenModalDelete(params.row)} style={{ color: 'red' }}>
+      </DeleteForeverTwoToneIcon>
     ),
   }
 ]

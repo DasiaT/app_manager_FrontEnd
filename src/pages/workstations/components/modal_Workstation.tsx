@@ -110,6 +110,7 @@ export const FormAddGeneral: FC<{
             </Grid>
 
             <Grid
+              item
               container
               xs={12}
               sx={{ marginTop: "20px", justifyContent: "space-between" }}

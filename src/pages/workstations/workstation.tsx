@@ -10,6 +10,7 @@ import SearchInput from "../../components_generals/search_input";
 import { FormAddGeneral } from "./components/modal_Workstation";
 import { IWorstation } from "../../stores/users/interfaces/IWorkstation";
 import { FormWorkstationPatch } from "./components/modal_WorkstationPatch";
+import { FormWorkstationDelete } from "./components/modal_WorkstationDelete";
 
 export const WorkstationManager = () => {
 
@@ -18,6 +19,8 @@ export const WorkstationManager = () => {
     const [isModalOpenPOST, setIsModalOpenLocal] = useState<boolean>(false);//PARA INGRESAR NUEVO
     
     const [isModalOpenPATCH, setIsModalOpenPATCH] = useState<boolean>(false);//PARA EDITAR
+
+    const [isModalOpenDelete, setIsModalOpenDelete] = useState<boolean>(false);//PARA EDITAR
 
     const [query, setQuery] = useState<IWorstationFilters>({ id: 0, search: '', take: 0, skip: 0 })//PARA EL BUSCADOR
 
@@ -41,11 +44,11 @@ export const WorkstationManager = () => {
 
     //PARA EL MODAL
     useEffect(() => {
-        if ((!isModalOpenPOST || !isModalOpenPATCH) && guardadoExitoso) {
+        if ((!isModalOpenPOST || !isModalOpenPATCH  || isModalOpenDelete) && guardadoExitoso) {
             setGuardadoExitoso(false);
             refetch();
         }
-    }, [isModalOpenPOST,isModalOpenPATCH,guardadoExitoso, refetch]);
+    }, [isModalOpenPOST,isModalOpenPATCH, isModalOpenDelete, guardadoExitoso, refetch]);
 
 
     //PARA EL MODAL PATCH
@@ -54,9 +57,22 @@ export const WorkstationManager = () => {
         setIsModalOpenPATCH(true);
     };
 
+    //PARA EL MODAL DELETE
+    const OpenModalDelete = (rowData: IWorstation) => {
+        setSelectedRow(rowData);
+        setIsModalOpenDelete(true);
+    };
+
     return (
         <>
             <Grid container spacing={2} sx={{ width: '100%' }}>
+                
+                <FormAddGeneral 
+                isModalOpen={isModalOpenPOST} 
+                setIsModalOpen={setIsModalOpenLocal} 
+                setIsSaveExist={setGuardadoExitoso}
+                />
+
                 <FormWorkstationPatch
                     datos={selectedRow}
                     isModalOpen={isModalOpenPATCH}
@@ -64,10 +80,11 @@ export const WorkstationManager = () => {
                     setIsSaveExist={setGuardadoExitoso}
                 />
 
-                <FormAddGeneral 
-                isModalOpen={isModalOpenPOST} 
-                setIsModalOpen={setIsModalOpenLocal} 
-                setIsSaveExist={setGuardadoExitoso}
+                <FormWorkstationDelete
+                    datos={selectedRow}
+                    isModalOpen={isModalOpenDelete}
+                    setIsModalOpen={setIsModalOpenDelete}
+                    setIsSaveExist={setGuardadoExitoso}
                 />
 
                 <Grid container spacing={2}>
@@ -91,12 +108,13 @@ export const WorkstationManager = () => {
                 <DataGrid
                     {...tableBase}
                     rows={data?.result || []}
-                    columns={columns_Workstation({ OpenModalPatch })}
+                    columns={columns_Workstation({ OpenModalPatch, OpenModalDelete })}
                     loading={isLoading || isFetching}
                     paginationMode="server"
                     rowCount={data?.count || 0}
                     getRowId={(row) => row.id}
                     paginationModel={paginationModel}
+                    pageSizeOptions={[5, 10, 25, 50, 100, 0]}
                     onPaginationModelChange={setPaginationModel}
                     onRowDoubleClick={(params) => OpenModalPatch(params.row as IWorstation)}
                 />
