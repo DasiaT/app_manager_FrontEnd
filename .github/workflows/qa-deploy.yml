@@ -1,0 +1,86 @@
+name: Deploy QA
+on:
+  push:
+    branches:
+      - qa
+jobs:
+  build:
+    runs-on: qa
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }} with BUN 🎉
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        
+    - run: cd /var/www/html/manager_security_frontend/frontend-runner/_work/Manager_Security_FrontEnd/Manager_Security_FrontEnd
+    - name: 'Create env file'
+      run: |
+          touch .env
+          echo VITE_JS_APP_ENV=QA >> .env
+          echo VITE_JS_APP_VERSION=${{ secrets.VITE_JS_APP_VERSION_QA }} >> .env
+          echo VITE_JS_APP_API_URL=${{ secrets.VITE_JS_APP_API_URL_QA }} >> .env
+          cat .env
+    - name: install dependencies ⬇️
+      run:  bun install
+      
+    - name: build 📦
+      run: bun run build
+      
+    - name: move to content build 🚚
+      run: rsync -avz --delete dist/ /var/www/html/manager_security_frontend/frontend/
+    - name: restart nginx ♿
+      run: sudo systemctl restart nginx.service
+     # Custom Discord message using GitHub Actions context and secrets
+    - name: Notify Discord
+      if: success()
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        GITHUB_ACTOR: ${{ github.actor }}
+        REPOSITORY: ${{ github.repository }}
+        VERSION: ${{ secrets.VITE_JS_APP_VERSION_QA }}
+      run: |
+        json=$(jq -n \
+          --arg username "Github" \
+          --arg content "🚀 Despliegue Master Data - QA - v${VERSION}" \
+          --arg version "v${VERSION}" \
+          --arg actor "${GITHUB_ACTOR}" \
+            --arg repository "${REPOSITORY}" \
+            --argjson color 15257600 \
+            --arg description "Despliegue y actualizacion de servidor Frontend" \
+          '{
+              "username": $username,
+              "content": $content,
+              "embeds": [
+                {
+                  "author": {
+                    "name": "Servidor QA"
+                  },
+                  "title": "Version '"$version"'",
+                  "description": $description,
+                  "color": $color,
+                  "fields": [
+                        {
+                          "name": "Version",
+                          "value": $version,
+                          "inline": true
+                        },
+                        {
+                          "name": "Usuario",
+                          "value": $actor,
+                          "inline": true
+                        },
+                        {
+                          "name": "Repositorio",
+                          "value": $repository,
+                          "inline": true
+                        }
+                    ],
+                }
+              ]
+            }')
+        curl -X POST $DISCORD_WEBHOOK -H "Content-Type: application/json" -d "$json"
