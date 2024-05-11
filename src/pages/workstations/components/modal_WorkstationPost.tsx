@@ -10,7 +10,7 @@ import { IWorstationPost } from "../../../stores/users/interfaces/IWorkstation";
 import { style_modal } from "../../../components_generals/style_modal";
 import { BaseApiErrorResponse } from "../../../stores/interfaces generales/Base_API_Error_Response";
 
-export const FormAddGeneral: FC<{
+export const FormWorkstationPost: FC<{
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSaveExist: React.Dispatch<React.SetStateAction<boolean>>;

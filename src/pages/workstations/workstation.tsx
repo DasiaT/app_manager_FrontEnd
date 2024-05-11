@@ -7,8 +7,8 @@ import { useGetWorkstationQuery } from "../../stores/users/workstationAPI";
 import { tableBase } from "../dashboard/components/functions_generales";
 import { columns_Workstation } from "./components/columns_Workstation";
 import SearchInput from "../../components_generals/search_input";
-import { FormAddGeneral } from "./components/modal_Workstation";
 import { IWorstation } from "../../stores/users/interfaces/IWorkstation";
+import { FormWorkstationPost } from "./components/modal_WorkstationPost";
 import { FormWorkstationPatch } from "./components/modal_WorkstationPatch";
 import { FormWorkstationDelete } from "./components/modal_WorkstationDelete";
 
@@ -20,15 +20,15 @@ export const WorkstationManager = () => {
     
     const [isModalOpenPATCH, setIsModalOpenPATCH] = useState<boolean>(false);//PARA EDITAR
 
-    const [isModalOpenDelete, setIsModalOpenDelete] = useState<boolean>(false);//PARA EDITAR
+    const [isModalOpenDelete, setIsModalOpenDelete] = useState<boolean>(false);//PARA ELIMINAR
 
     const [query, setQuery] = useState<IWorstationFilters>({ id: 0, search: '', take: 0, skip: 0 })//PARA EL BUSCADOR
 
-    const [selectedRow, setSelectedRow] = useState<IWorstation>({ id: 0, name: '' });//PARA MANDAR LOS DATOS AL MODAL PATCH
+    const [selectedRow, setSelectedRow] = useState<IWorstation>({ id: 0, name: '' });//PARA MANDAR LOS DATOS AL MODAL PATCH Y DELETE
 
-    const { data, isLoading, isFetching, refetch } = useGetWorkstationQuery(query)//API 
+    const { data, isLoading, isFetching, refetch } = useGetWorkstationQuery(query)//API DEL STORE
 
-    const [paginationModel, setPaginationModel] = useState<{ pageSize: number; page: number }>({
+    const [paginationModel, setPaginationModel] = useState<{ pageSize: number; page: number }>({//PAGINACION DE TABLA INICIAL
         pageSize: 0,
         page: 0,
     });
@@ -67,7 +67,7 @@ export const WorkstationManager = () => {
         <>
             <Grid container spacing={2} sx={{ width: '100%' }}>
                 
-                <FormAddGeneral 
+                <FormWorkstationPost 
                 isModalOpen={isModalOpenPOST} 
                 setIsModalOpen={setIsModalOpenLocal} 
                 setIsSaveExist={setGuardadoExitoso}

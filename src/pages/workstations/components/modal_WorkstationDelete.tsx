@@ -2,7 +2,7 @@ import React, { useEffect, useState, FC } from "react";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import { Grid, TextField, CircularProgress, Typography } from "@mui/material";
-import SaveAsTwoToneIcon from "@mui/icons-material/SaveAsTwoTone";
+import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useDeleteWorkstationMutation } from "../../../stores/users/workstationAPI";
@@ -154,7 +154,7 @@ export const FormWorkstationDelete: FC<{
                     isLoadingRegister ? (
                       <CircularProgress size={20} />
                     ) : (
-                      <SaveAsTwoToneIcon />
+                      <DeleteForeverTwoToneIcon />
                     )
                   }
                 >
