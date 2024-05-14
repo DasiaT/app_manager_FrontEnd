@@ -130,25 +130,25 @@ export const MenuSideNav: React.FC<{
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 offset: ({ placement }: any) => {
                     if (placement.includes('end')) {
-                        return openMenu ? [-8, (navbarSize - 51)] : [0, 0]; // Cambia los valores según el estado de openMenu
+                        return openMenu ? [-8, (navbarSize - 46)] : [8, 5]; // Cambia los valores según el estado de openMenu
                     }
-                    return openMenu ? [-8, (navbarSize - 51)] : [0, 0]; // Cambia los valores según el estado de openMenu
+                    return openMenu ? [-8, (navbarSize - 46)] : [8, 5]; // Cambia los valores según el estado de openMenu
                 },
             },
         },
     ];
 
     return (
-        <Sheet sx={{ borderRadius: 'sm', py: 1, mr: 20, justifyContent:'center' }}>
+        <Sheet sx={{ borderRadius: 'sm', py: 1, mr: 20 }}>
             <List>
                 {pages_general_route.map((items, index) => (
-                    <ListItem key={items.label} >
+                    <ListItem key={items.label}>
                         <NavMenuButton
                             label={items.label}
                             open={menuIndex === index}
                             onOpen={() => setMenuIndex(index)}
                             onLeaveMenu={createHandleLeaveMenu(index)}
-                            style={{ minHeight: 20, justifyContent: openMenu ? 'initial' : 'center', justifyItems:'center' }}
+                            style={{ minHeight: 20, justifyContent: openMenu ? 'initial' : 'center', }}
                             modifiers={modifiers}
                             menu={
                                 <Menu onClose={() => setMenuIndex(null)} modifiers={modifiers}>
@@ -200,15 +200,14 @@ export const MenuSideNav: React.FC<{
                             }
                         >
 
-                            <ListItemIcon sx={{ minWidth: 0, mr: openMenu ? 1 : 'auto', justifyContent: 'center', color: selectedItemMenu === index ? 'blue' : '' }}>
+                            <ListItemIcon sx={{ minWidth: 0, mr: openMenu ? 2 : 'auto', justifyContent: 'center', color: selectedItemMenu === index ? 'blue' : '' }}>
                                 {items.icon}
                             </ListItemIcon>
-                            <ListItemText primary={items.label} sx={{ opacity: openMenu ? 1 : 0, color: openMenu ? 'black' : 'black', marginLeft: 1 }} />
+                            <ListItemText primary={items.label} sx={{ opacity: openMenu ? 1 : 0, color: openMenu ? 'black' : 'black', marginLeft: openMenu ? 1 : 1 }} />
                         </NavMenuButton>
                     </ListItem>
                 ))}
             </List>
-            
         </Sheet>
     );
 }
