@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { usePatchWorkstationMutation } from "../../../stores/users/workstationAPI";
 import { IWorstation, IWorstationPatch } from "../../../stores/users/interfaces/IWorkstation";
 import { style_modal } from "../../../components_generals/style_modal";
-import { BaseApiErrorResponse } from "../../../stores/interfaces generales/Base_API_Error_Response";
+import { Handler_error_api } from "../../../stores/interfaces generales/Base_Handler_Error_Api";
 
 export const FormWorkstationPatch: FC<{
   datos?: IWorstation;
@@ -40,14 +40,12 @@ export const FormWorkstationPatch: FC<{
     }
 
     if (isErrorRegister || errorRegister) {
-      let errorMessage = 'Hubo un error al realizar la solicitud';
+      
+      const errorMessage = Handler_error_api(errorRegister);
 
-      if (errorRegister && 'data' in errorRegister && Array.isArray(errorRegister.data) && errorRegister.data.length > 0) {
-        const errorResponse = errorRegister.data[0] as BaseApiErrorResponse;
-        errorMessage = errorResponse.message;
-      }
-
-      toast.error(errorMessage.toString());
+      errorMessage.map((result)=> {
+        toast.error(result);
+      })
     }
 
   }, [

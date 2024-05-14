@@ -1,24 +1,15 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { BaseApiResponse } from "../interfaces generales/Base_API_Response";
 import { IWorstation, IWorstationPost, IWorstationFilters, IWorstationPatch, IWorstationDelete } from "./interfaces/IWorkstation";
-import { obtenerDatosUsuario } from "../../components_generals/user_datos";
-export const workstationAPI = createApi({
-    reducerPath: 'workstationApi',
-    baseQuery: fetchBaseQuery({
-        baseUrl: import.meta.env.VITE_JS_APP_API_URL + '/api',
-        prepareHeaders: (headers) => {
-            
-            const isLoggedIn = obtenerDatosUsuario();
+import { baseQuery } from "../interfaces generales/Base_Query";
 
-            headers.set('Authorization', `Bearer ${isLoggedIn?.token}`);
-            
-            return headers;
-        }
-    }),
-    tagTypes: ['Workstation', 'Workstation'],
+export const workstationAPI = createApi({
+    reducerPath: "workstationApi",
+    baseQuery,
+    tagTypes: ["Workstation", "Workstation"],
     endpoints: (builder) => ({
         getWorkstation: builder.query<BaseApiResponse<IWorstation>, IWorstationFilters>({
-            query: ({id, search, take, skip}) => {
+            query: ({ id, search, take, skip }) => {
                 let url = `/Workstation?Take=${take}&Skip=${skip}`;
 
                 if (search && id) {
@@ -31,60 +22,61 @@ export const workstationAPI = createApi({
 
                 return {
                     url: url,
-                    method: 'GET',
+                    method: "GET"
                 };
+      
             },
-            providesTags: (result) => result && result.result 
-            ? [...result.result.map(({ id }) => ({ type: 'Workstation', id: id } as const)), { type: 'Workstation', id: 'LIST' }] 
-            : [{ type: 'Workstation', id: 'LIST' }],
+            providesTags: (result) =>
+                result && result.result
+                    ? [...result.result.map(({ id }) => ({ type: "Workstation", id: id } as const)), { type: "Workstation", id: "LIST" }]
+                    : [{ type: "Workstation", id: "LIST" }],
         }),
         postWorkstation: builder.mutation<BaseApiResponse<IWorstationPost>, IWorstationPost>({
-            query: ({name}) => {
+            query: ({ name }) => {
                 const url = `/Workstation`;
 
                 return {
                     url: url,
-                    method: 'POST',
+                    method: "POST",
                     body: {
-                        Name : name
-                    }
+                        Name: name,
+                    },
                 };
-            }
+            },
         }),
         patchWorkstation: builder.mutation<BaseApiResponse<IWorstationPatch>, IWorstationPatch>({
-            query: ({id, name}) => {
+            query: ({ id, name }) => {
                 const url = `/Workstation`;
 
                 return {
                     url: url,
-                    method: 'PATCH',
+                    method: "PATCH",
                     body: {
                         Id: id,
-                        Name : name
-                    }
+                        Name: name,
+                    },
                 };
-            }
+            },
         }),
         deleteWorkstation: builder.mutation<BaseApiResponse<IWorstationDelete>, IWorstationDelete>({
-            query: ({id}) => {
+            query: ({ id }) => {
                 const url = `/Workstation`;
 
                 return {
                     url: url,
-                    method: 'DELETE',
+                    method: "DELETE",
                     body: {
-                        Id: id
-                    }
+                        Id: id,
+                    },
                 };
-            }
+            },
         })
-    })
+    }),
 });
 
-
 export const {
-    useGetWorkstationQuery, 
+    useGetWorkstationQuery,
     usePostWorkstationMutation,
     usePatchWorkstationMutation,
     useDeleteWorkstationMutation
-} = workstationAPI; 
+} = workstationAPI;

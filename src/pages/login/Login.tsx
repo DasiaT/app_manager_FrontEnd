@@ -5,7 +5,7 @@ import { usePostLoginMutation } from '../../stores/login/login';
 import { ILogin } from '../../stores/login/interfaces/IloginResponse';
 import { useForm } from "react-hook-form";
 import { toast } from 'sonner';
-import { BaseApiErrorResponse } from '../../stores/interfaces generales/Base_API_Error_Response';
+import { Handler_error_api } from '../../stores/interfaces generales/Base_Handler_Error_Api';
 
 
 const Login_Page: FC = () => {
@@ -33,14 +33,11 @@ const Login_Page: FC = () => {
         }
 
         if (isError || error) {
-            let errorMessage = 'Hubo un error al realizar la solicitud';
+            const errorMessage = Handler_error_api(error);
             
-            if (error && 'data' in error && Array.isArray(error.data) && error.data.length > 0) {
-                const errorResponse = error.data[0] as BaseApiErrorResponse;
-                errorMessage = errorResponse.message;
-            }
-
-            toast.error(errorMessage.toString());
+            errorMessage.map((result)=> {
+                toast.error(result);
+            })
         }
         
     }, [isSuccess, reset, data, resetLogin, isError, error,]);

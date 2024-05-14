@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { useDeleteWorkstationMutation } from "../../../stores/users/workstationAPI";
 import { IWorstation, IWorstationPatch, IWorstationDelete } from "../../../stores/users/interfaces/IWorkstation";
 import { style_modal } from "../../../components_generals/style_modal";
-import { BaseApiErrorResponse } from "../../../stores/interfaces generales/Base_API_Error_Response";
+import { Handler_error_api } from "../../../stores/interfaces generales/Base_Handler_Error_Api";
 
 export const FormWorkstationDelete: FC<{
   datos?: IWorstation;
@@ -40,14 +40,12 @@ export const FormWorkstationDelete: FC<{
     }
 
     if (isErrorRegister || errorRegister) {
-      let errorMessage = 'Hubo un error al realizar la solicitud';
 
-      if (errorRegister && 'data' in errorRegister && Array.isArray(errorRegister.data) && errorRegister.data.length > 0) {
-        const errorResponse = errorRegister.data[0] as BaseApiErrorResponse;
-        errorMessage = errorResponse.message;
-      }
+      const errorMessage = Handler_error_api(errorRegister);
 
-      toast.error(errorMessage.toString());
+      errorMessage.map((result)=> {
+        toast.error(result);
+      })
     }
 
   }, [

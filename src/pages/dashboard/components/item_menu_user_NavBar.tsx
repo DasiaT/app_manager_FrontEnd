@@ -10,6 +10,7 @@ import { Grid } from '@mui/material';
 import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 import Chip from '@mui/joy/Chip';
+import { clearLocalStorage } from '../../login/components/singout';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -25,6 +26,7 @@ function UserMenuNavBar() {
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
+        clearLocalStorage();
     };
     //marginLeft: 'auto'
     return (

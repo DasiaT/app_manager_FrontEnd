@@ -3,14 +3,17 @@ import { IWorstationFilters } from "../../stores/users/interfaces/IWorkstation";
 import { useEffect, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import { DataGrid } from "@mui/x-data-grid";
-import { useGetWorkstationQuery } from "../../stores/users/workstationAPI";
+import { toast } from "sonner";
 import { tableBase } from "../dashboard/components/functions_generales";
 import { columns_Workstation } from "./components/columns_Workstation";
 import SearchInput from "../../components_generals/search_input";
 import { IWorstation } from "../../stores/users/interfaces/IWorkstation";
+import { useGetWorkstationQuery } from "../../stores/users/workstationAPI";
 import { FormWorkstationPost } from "./components/modal_WorkstationPost";
 import { FormWorkstationPatch } from "./components/modal_WorkstationPatch";
 import { FormWorkstationDelete } from "./components/modal_WorkstationDelete";
+import { Handler_error_api } from "../../stores/interfaces generales/Base_Handler_Error_Api";
+
 
 export const WorkstationManager = () => {
 
@@ -26,7 +29,7 @@ export const WorkstationManager = () => {
 
     const [selectedRow, setSelectedRow] = useState<IWorstation>({ id: 0, name: '' });//PARA MANDAR LOS DATOS AL MODAL PATCH Y DELETE
 
-    const { data, isLoading, isFetching, refetch } = useGetWorkstationQuery(query)//API DEL STORE
+    const { data, isLoading, isFetching, refetch, error, isError } = useGetWorkstationQuery(query)//API DEL STORE
 
     const [paginationModel, setPaginationModel] = useState<{ pageSize: number; page: number }>({//PAGINACION DE TABLA INICIAL
         pageSize: 0,
@@ -48,7 +51,16 @@ export const WorkstationManager = () => {
             setGuardadoExitoso(false);
             refetch();
         }
-    }, [isModalOpenPOST,isModalOpenPATCH, isModalOpenDelete, guardadoExitoso, refetch]);
+
+        if(isError || error) {
+            const errorMessage = Handler_error_api(error);
+            
+            errorMessage.map((result)=> {
+                toast.error(result);
+            })
+        }
+
+    }, [isModalOpenPOST,isModalOpenPATCH, isModalOpenDelete, guardadoExitoso, refetch, isError, error]);
 
 
     //PARA EL MODAL PATCH

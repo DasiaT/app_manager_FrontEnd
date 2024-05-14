@@ -10,11 +10,11 @@ import { StyledEngineProvider } from '@mui/material/styles';
 function App() {
 
   const isLoggedIn = !! localStorage.getItem('loginData');
-  //console.log("ver actividad: ", isLoggedIn)
+  //console.log("ver actividad: ", localStorage.getItem('loginData'))
   return (
     <>
     <Provider store={store}>
-    <Toaster richColors position="top-right" expand={true} offset={20} closeButton={true} visibleToasts={6} />
+    <Toaster richColors position="top-right" expand={true} offset={20} closeButton={true} visibleToasts={6}/>
       {isLoggedIn ? (<StyledEngineProvider injectFirst><PersistentDrawerLeft/></StyledEngineProvider>) : <Login_Page/>}
     </Provider>
     </>
