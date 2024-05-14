@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import Paper  from '@mui/material/Paper';
 import { Item_Menu } from './components/Item_menu';
-import { pages_mantenimiento } from './components/Pages_Mantenimiento';
+import { pages_general_route } from './components/Pages_Mantenimiento';
 
 const Bottom_Navigation: React.FC = () => {
 
@@ -23,7 +23,7 @@ const Bottom_Navigation: React.FC = () => {
       <Box sx={{ flexGrow: 10 , height:'120px'}}>
       <Grid2 className="Menu">
             <BottomNavigation showLabels value={value} onChange={handleChange}>
-              {pages_mantenimiento.map((page, index) => (
+              {pages_general_route.map((page, index) => (
                 <Grid2 spacing={2} key={index}>
                   <Item_Menu elevation={0}>
                       <NavLink to={page.path} style={{ textDecoration: 'none', fontWeight: 'bold' , width:'100%', height:'100%' }}>
@@ -39,7 +39,7 @@ const Bottom_Navigation: React.FC = () => {
           </Grid2>
       </Box>
       <Routes>
-      {pages_mantenimiento.map((page) => (
+      {pages_general_route.map((page) => (
         <Route path={page.path} element={page.content} />
       ))}
       </Routes>

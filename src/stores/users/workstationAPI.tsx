@@ -1,22 +1,17 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BaseApiResponse } from "../interfaces generales/Base_API_Response";
 import { IWorstation, IWorstationPost, IWorstationFilters, IWorstationPatch, IWorstationDelete } from "./interfaces/IWorkstation";
-
+import { obtenerDatosUsuario } from "../../components_generals/user_datos";
 export const workstationAPI = createApi({
     reducerPath: 'workstationApi',
     baseQuery: fetchBaseQuery({
         baseUrl: import.meta.env.VITE_JS_APP_API_URL + '/api',
         prepareHeaders: (headers) => {
-           const isLoggedIn = localStorage.getItem('loginData');
-           
+            
+            const isLoggedIn = obtenerDatosUsuario();
 
-            if (isLoggedIn) {
-                const localStorageObject = JSON.parse(isLoggedIn);
-
-                const token = localStorageObject.result[0].token;
-                
-                headers.set('Authorization', `Bearer ${token}`);
-            }
+            headers.set('Authorization', `Bearer ${isLoggedIn?.token}`);
+            
             return headers;
         }
     }),

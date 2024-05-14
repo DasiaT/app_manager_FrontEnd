@@ -12,16 +12,15 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import { pages_mantenimiento } from './components/Pages_Mantenimiento';
-import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
+import { pages_general_route } from './components/Pages_Mantenimiento';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { clearLocalStorage } from '../login/components/singout';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { Tooltip } from '@mui/material';
+import { MenuSideNav } from './components/dropdown_menu';
+import UserMenuNavBar from './components/item_menu_user_NavBar';
 
-const drawerWidth = 240;
+const drawerWidth = 220;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -64,6 +63,7 @@ const PersistentDrawerLeft = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
+  height: '50px',
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
@@ -94,6 +94,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export default function MiniDrawer() {
   const theme = useTheme();
+
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
@@ -109,7 +110,7 @@ export default function MiniDrawer() {
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <PersistentDrawerLeft position="fixed" open={open}>
-          <Toolbar>
+          <Toolbar sx={{ height: '50px' }}>
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -124,6 +125,7 @@ export default function MiniDrawer() {
             <Typography variant="h6" noWrap component="div" sx={{ fontSize: '1.5rem' }}>
               Security Manager
             </Typography>
+            <UserMenuNavBar></UserMenuNavBar>{/*PARA EL USUARIO*/}
           </Toolbar>
         </PersistentDrawerLeft>
         <Drawer variant="permanent" open={open}>
@@ -134,28 +136,28 @@ export default function MiniDrawer() {
           </DrawerHeader>
           <Divider />
           <List>
-            {pages_mantenimiento.map((text) => (
-              <ListItem key={text.label} disablePadding sx={{ display: 'block' }}>
-                <ListItemButton component={NavLink} to={text.path} sx={{ minHeight: 48, justifyContent: open ? 'initial' : 'center', px: 2.5, }}>
-                  <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : 'auto', justifyContent: 'center', }}>
-                    {text.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={text.label} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-            <ExitToAppIcon onClick={clearLocalStorage}></ExitToAppIcon>
+            <MenuSideNav openMenu={open} navbarSize={drawerWidth} />{/*SIDE BAR ITEMS DEL MENU*/}
+
+            <Tooltip disableFocusListener title="Cerrar Session" placement="right">
+              <ExitToAppIcon onClick={clearLocalStorage}></ExitToAppIcon>
+            </Tooltip>
+
           </List>
         </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }} >
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
           <Routes>
-            {pages_mantenimiento.map((text) => (
-              <Route key={text.label} path={text.path} element={text.content} />
-            ))}
+            {pages_general_route.map((parentText) =>
+              parentText.children ? parentText.children.map((childText) => (
+                <Route key={childText.label} path={parentText.path + childText.path} element={childText.content} />
+              )) : (
+                <Route key={parentText.label} path={parentText.path} element={parentText.content} />
+              )
+            )}
           </Routes>
         </Box>
-       
+
+
       </Box>
     </Router>
   );

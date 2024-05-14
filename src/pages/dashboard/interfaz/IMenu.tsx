@@ -5,5 +5,5 @@ export interface IMenu {
     content: React.ReactNode;
     valor?: number;
     OnClick?:() => void;
-    itemSon?: IMenu[];
+    children?: IMenu[];
 }
